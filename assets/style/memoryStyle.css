@@ -1,0 +1,12 @@
+.card{
+    background: lightsalmon;
+    height: 30px;
+    width: 30px;
+}
+
+#game-board{
+    display: grid;
+    grid-template-columns:1fr 1fr 1fr 1fr;
+    grid-template-rows:auto;
+    gap: 10px;
+}

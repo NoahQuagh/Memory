@@ -1,6 +1,7 @@
 const dimension =150;
-const urlsPicsum = [];
-const grid = document.getElementById("memory-grid");
+let urlsPicsum = [];
+let cards=[];
+const grid = document.getElementById("game-board");
 const movesDisplay = document.getElementById("moves");
 const timerDisplay = document.getElementById("timer");
 const resultDisplay = document.getElementById("result");
@@ -11,6 +12,8 @@ let secondCard=null;
 let lockBoard=false;
 let moves=0;
 let matchedCount=0;
+let second=0;
+let timerInterval=null;
 
 
 /**
@@ -30,7 +33,7 @@ const imgStart = getRandomInt(1,100)
  * @param size nombre d'url a généré
  */
 function createImages(size) {
-
+    urlsPicsum = []
     for (let i = imgStart; i <= imgStart+7; i++) {
         const url = `https://picsum.photos/id/${i}/${size}`;
         urlsPicsum.push(url);
@@ -46,7 +49,6 @@ function createImages(size) {
 function duplicateImages(imgList){
     return cards=[...imgList,...imgList];
 }
-
 
 /**
  * mélange un tableau d'element avec l'algorithme de permutation de Fisher-Yates
@@ -73,20 +75,25 @@ function shuffle(array){
 function initGame(){
     grid.innerHTML = "";
     resultDisplay.textContent = "";
+    movesDisplay.textContent = "Coups : 0";
+    timerDisplay.textContent = "00:00";
+
     moves = 0;
     matchedCount = 0;
     seconds = 0;
     firstCard = null;
     secondCard = null;
-    lockBoard = fals
+    lockBoard = false;
+
+    clearInterval(timerInterval);
 
 
     createImages(dimension);
-    const urlListShuffle = shuffle(duplicateImages(urlsPicsum));
+    const cards = shuffle(duplicateImages(urlsPicsum));
 
 
 
-    urlListShuffle.forEach(url => {
+    cards.forEach(url => {
         const card = Object.assign(document.createElement('div'), {
             className: 'card',
             role: 'button',
@@ -96,6 +103,7 @@ function initGame(){
         card.addEventListener('click', () => handleCardClick(card));
         grid.appendChild(card);
     })
+    startTimer();
 }
 
 function handleCardClick(card){
@@ -147,9 +155,23 @@ function revealCard(card){
     card.appendChild(img);
 }
 
-function checkVictory(){}
+function checkVictory(){
+    if(matchedCount === cards.length){
+        clearInterval(timerInterval);
+        resultDisplay.textContent = `Coups : ${moves}`;
+    }
+}
 
+function startTimer(){
+    timerInterval = setInterval(()=>{
+        second++;
+        timerDisplay.textContent = `${formatTime(second)}`;
+    },1000)
+}
 
+if (restartBtn) {
+    restartBtn.addEventListener('click', initGame);
+}
 
 
 document.addEventListener('DOMContentLoaded', initGame);
