@@ -26,13 +26,14 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const imgStart = getRandomInt(1,100)
+
 
 /**
  * crée une liste d'url d'image via l'api de picsum.photos
  * @param size nombre d'url a généré
  */
 function createImages(size) {
+    const imgStart = getRandomInt(1,100)
     urlsPicsum = []
     for (let i = imgStart; i <= imgStart+7; i++) {
         const url = `https://picsum.photos/id/${i}/${size}`;
@@ -106,6 +107,10 @@ function initGame(){
     startTimer();
 }
 
+/**
+ * Gestion de l'évènement quand une carte est cliqué
+ * @param card card cliqué
+ */
 function handleCardClick(card){
     if (lockBoard || card.classList.contains("matched") || card === firstCard ||
         card.firstChild) {
@@ -126,6 +131,9 @@ function handleCardClick(card){
     checkMatch();
 }
 
+/**
+ * Vérifie si les deux cartes retournées correspond
+ */
 function checkMatch(){
     if(firstCard.dataset.value === secondCard.dataset.value){
         firstCard.classList.add("matched");
@@ -142,12 +150,19 @@ function checkMatch(){
     }
 }
 
+/**
+ * Remet les cartes retournées
+ */
 function resetTurn() {
     firstCard = null;
     secondCard = null;
     lockBoard = false;
 }
 
+/**
+ * Montre la carte selectionner
+ * @param card carte choisie
+ */
 function revealCard(card){
     const img = document.createElement("img");
     img.src = card.dataset.value;
@@ -155,6 +170,9 @@ function revealCard(card){
     card.appendChild(img);
 }
 
+/**
+ * Vérifie si toutes les cartes sont retournées
+ */
 function checkVictory(){
     if(matchedCount === cards.length){
         clearInterval(timerInterval);
@@ -162,10 +180,13 @@ function checkVictory(){
     }
 }
 
+/**
+ * Démarre le chronomètre
+ */
 function startTimer(){
     timerInterval = setInterval(()=>{
-        second++;
-        timerDisplay.textContent = `${formatTime(second)}`;
+        seconds++;
+        timerDisplay.textContent = `${formatTime(seconds)}`;
     },1000)
 }
 

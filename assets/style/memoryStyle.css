@@ -1,12 +1,236 @@
-.card{
-    background: lightsalmon;
-    height: 30px;
-    width: 30px;
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,500&family=Caveat:wght@600&display=swap');
+
+:root {
+    --noir: #16130f;
+    --dos-carte: #2c2620;
+    --table: #1e1a15;
+    --carmin: #e6402c;
+    --ambre: #f5b942;
+    --ivoire: #f2ead9;
+
+    --rayon: 2px;
+    --duree-flip: 480ms;
 }
 
-#game-board{
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.85rem 1.75rem;
+    padding: clamp(1.5rem, 5vw, 3.5rem) 1.25rem 4rem;
+    background: var(--noir);
+    color: var(--ivoire);
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 1rem;
+    overflow: hidden;
+}
+
+
+#moves,
+#timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+}
+
+#moves {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+#timer {
+    color: var(--ambre);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+}
+
+#moves,
+#timer {
+    padding: 0.65rem 1.1rem;
+    background: var(--table);
+    border: 1px solid color-mix(in srgb, var(--ivoire) 14%, transparent);
+    border-radius: var(--rayon);
+}
+
+
+#result:empty {
+    display: none;
+}
+
+
+@keyframes tampon {
+    from {
+        opacity: 0;
+        transform: rotate(-3deg) scale(1.6);
+    }
+}
+
+
+#game-board {
+    position: relative;
     display: grid;
-    grid-template-columns:1fr 1fr 1fr 1fr;
-    grid-template-rows:auto;
-    gap: 10px;
+    grid-template-columns: repeat(4, clamp(3.6rem, 18vw, 5.75rem));
+    grid-template-rows: repeat(4, clamp(3.6rem, 18vw, 5.75rem));
+    gap: clamp(0.5rem, 2vw, 0.85rem);
+    padding: clamp(1rem, 3vw, 1.5rem);
+    margin-block: 1.5rem;
+    background: var(--table);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ivoire) 10%, transparent);
+}
+
+#game-board {
+    perspective: 900px;
+    counter-reset: cadre;
+}
+
+.card {
+    counter-increment: cadre;
+    position: relative;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    transition: transform var(--duree-flip) cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+.card::before {
+    content: counter(cadre, decimal-leading-zero);
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: var(--dos-carte);
+    border: 1px solid color-mix(in srgb, var(--ivoire) 12%, transparent);
+    border-radius: var(--rayon);
+    color: color-mix(in srgb, var(--ivoire) 55%, transparent);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    backface-visibility: hidden;
+}
+
+.card img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--rayon);
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+}
+
+.card:has(img) {
+    transform: rotateY(180deg);
+}
+
+.card:hover:not(:has(img)):not(.matched)::before {
+    border-color: color-mix(in srgb, var(--ambre) 55%, transparent);
+}
+
+.card.matched {
+    cursor: default;
+}
+
+.card.matched img {
+    filter: saturate(1.08);
+}
+
+.card.matched::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border: 2px solid var(--carmin);
+    border-radius: var(--rayon);
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+    pointer-events: none;
+}
+
+
+#restart-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0.7rem 1.4rem;
+    border: 1px solid var(--carmin);
+    border-radius: 999px;
+    color: var(--ivoire);
+    font-family: inherit;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: background-color 140ms ease, color 140ms ease, transform 100ms ease;
+}
+
+#restart-btn:hover {
+    background: var(--carmin);
+    color: var(--noir);
+}
+
+
+#moves {
+    order: 1;
+}
+
+#timer {
+    order: 2;
+}
+
+#result {
+    order: 3;
+    flex-basis: 100%;
+    text-align: center;
+}
+
+#game-board {
+    order: 4;
+    flex-basis: 100%;
+    justify-self: center;
+    margin-inline: auto;
+    padding: 15px 50%;
+}
+
+#restart-btn {
+    order: 5;
+}
+
+
+@media (max-width: 26rem) {
+    #game-board {
+        grid-template-columns: repeat(4, clamp(3rem, 20vw, 4rem));
+        grid-template-rows: repeat(4, clamp(3rem, 20vw, 4rem));
+        gap: 0.5rem;
+    }
+
+    .card::before {
+        font-size: 0.6rem;
+    }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    #restart-btn {
+        transition: none;
+    }
+
+    #timer::before {
+        animation: none;
+    }
+
+    #result:not(:empty) {
+        animation: none;
+    }
 }
