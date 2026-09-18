@@ -1,4 +1,4 @@
-const dimension =150
+const dimension =150;
 const urlsPicsum = [];
 
 function getRandomInt(min, max) {
@@ -37,9 +37,20 @@ function shuffle(array){
     }
 }
 
-createImages(dimension);
-shuffle(duplicateImages(urlsPicsum));
 
+function initGame(){
+    createImages(dimension);
+    const urlListShuffle = shuffle(duplicateImages(urlsPicsum));
+
+    const grid = document.getElementById("memory-grid");
+
+    urlListShuffle.forEach(url => {
+        grid.innerHTML+=(`<div class="card" role="button" tabindex="0" data.value="${url}"></div>`);
+    })
+}
+
+
+document.addEventListener('DOMContentLoaded', initGame);
 
 
 
