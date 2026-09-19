@@ -1,5 +1,7 @@
 # Memory
 
+https://noahquagh.github.io/Memory/
+
 Un jeu de mémoire (paires) en HTML, CSS et JavaScript vanilla. Les images des cartes sont chargées dynamiquement depuis [Picsum Photos](https://picsum.photos/).
 
 ## Règles du jeu
